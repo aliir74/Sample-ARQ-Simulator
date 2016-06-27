@@ -8,11 +8,11 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class SW {
 
-    private int Ws, Wr, R, Nf, v, d;
+    private int Ws, Wr, R, Nf, v, d, sequenceNumberBit;
     private double p;
     BlockingQueue<Message> queue1, queue2;
 
-    public SW(int ws, int wr, double p, int r, int nf, int v, int d) {
+    public SW(int ws, int wr, double p, int r, int nf, int v, int d, int sequenceNumberBit) {
         Ws = ws;
         Wr = wr;
         R = r;
@@ -20,6 +20,7 @@ public class SW {
         this.v = v;
         this.d = d;
         this.p = p;
+        this.sequenceNumberBit = sequenceNumberBit;
         queue1 = new LinkedBlockingQueue<Message>();
         queue2 = new LinkedBlockingQueue<Message>();
         senderReceiverCreate();
@@ -27,9 +28,9 @@ public class SW {
 
     void senderReceiverCreate() {
         System.out.println("test");
-        Sender sender = new Sender(Ws, R, Nf, v, d, p, "sender1", queue1, queue2);
+        Sender sender = new Sender(Ws, R, Nf, v, d, p, "sender1", queue1, queue2, sequenceNumberBit);
         sender.start();
-        Receiver receiver = new Receiver(Wr, R, Nf, v, d, p, "receiver1", queue2, queue1);
+        Receiver receiver = new Receiver(Wr, R, Nf, v, d, p, "receiver1", queue2, queue1, sequenceNumberBit);
         receiver.start();
     }
 }

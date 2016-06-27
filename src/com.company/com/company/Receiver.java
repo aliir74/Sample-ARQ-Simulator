@@ -15,12 +15,13 @@ public class Receiver extends Thread {
     int Ns, Nr;
     double p;
     int sendWait;
+    int sequenceNumberBit;
     Vector<String> Data;
     BlockingQueue<Message> queues, queuer;
 
 
     public Receiver(int ws, int r, int nf, int v, int d, double p, String threadName,
-                    BlockingQueue<Message> queues, BlockingQueue<Message> queuer) {
+                    BlockingQueue<Message> queues, BlockingQueue<Message> queuer, int sequenceNumberBit) {
         Ws = ws;
         R = r;
         Nf = nf;
@@ -30,7 +31,8 @@ public class Receiver extends Thread {
         this.threadName = threadName;
         this.queues = queues;
         this.queuer = queuer;
-        sendWait = Nf/R + d/v;
+        this.sequenceNumberBit = sequenceNumberBit;
+        sendWait = (int) Math.ceil(Nf/R + v/d);
         Ns = 0;
         Nr = 0;
         Data = new Vector<>(10);
@@ -56,6 +58,7 @@ public class Receiver extends Thread {
             Ns = msg.ack;
             if (Nr == msg.sendNumber && !bitErr)
                 Nr++;
+            Nr %= binaryPower(sequenceNumberBit);
 //        msg.data = Data.elementAt(Ns);
             Message tmp = new Message();
             tmp.data = ("Data" + Ns);
@@ -92,6 +95,14 @@ public class Receiver extends Thread {
             t = new Thread(this, threadName);
             t.start();
         }
+    }
+
+    int binaryPower(int x) {
+        int ans = 1;
+        for(int i = 0; i < x; i++) {
+            ans *= 2;
+        }
+        return ans;
     }
 }
 
