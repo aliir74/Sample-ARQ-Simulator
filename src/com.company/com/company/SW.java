@@ -22,9 +22,14 @@ public class SW {
         this.p = p;
         queue1 = new LinkedBlockingQueue<Message>();
         queue2 = new LinkedBlockingQueue<Message>();
+        senderReceiverCreate();
+    }
+
+    void senderReceiverCreate() {
+        System.out.println("test");
         Sender sender = new Sender(Ws, R, Nf, v, d, p, "sender1", queue1, queue2);
-        Receiver receiver = new Receiver(Wr, R, Nf, v, d, p, "receiver1", queue2, queue1);
         sender.start();
+        Receiver receiver = new Receiver(Wr, R, Nf, v, d, p, "receiver1", queue2, queue1);
         receiver.start();
     }
 }

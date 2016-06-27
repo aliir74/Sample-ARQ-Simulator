@@ -32,19 +32,22 @@ public class Receiver extends Thread {
         sendWait = Nf/R + d/v;
         Ns = 0;
         Nr = 0;
+        Data = new Vector<>(10);
         for(int i = 0; i < 10; i++) {
-            Data.add("Data" + (i+1));
+            Data.insertElementAt("Data" + (i+1), i);
         }
     }
 
     public void run() {
+        System.out.println("Receiver start!");
         Message msg;
         while((msg = queuer.poll()) == null);
         System.out.println(threadName + " Recevied: data=" + msg.data + "\t ack=" + msg.ack);
         Ns = msg.ack;
         if(Nr == msg.sendNumber)
             Nr++;
-        msg.data = Data.elementAt(Ns);
+//        msg.data = Data.elementAt(Ns);
+        msg.data = ("Data"+Ns);
         msg.ack = Nr;
         msg.sendNumber = Ns;
         try {
@@ -61,6 +64,10 @@ public class Receiver extends Thread {
 
     public void start() {
         System.out.println("Receiver " + threadName + " started");
+        if(t == null) {
+            t = new Thread(this, threadName);
+            t.start();
+        }
     }
 }
 
