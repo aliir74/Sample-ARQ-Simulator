@@ -4,8 +4,6 @@ package com.company;
  * Created by ali on 6/27/16.
  */
 public class Sender extends Thread {
-
-    private:
         Thread t;
         String threadName;
         int Ws, R, Nf, v, d;
