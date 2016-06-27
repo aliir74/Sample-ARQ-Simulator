@@ -3,6 +3,7 @@ package com.company;
 
 import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by ali on 6/27/16.
@@ -39,19 +40,31 @@ public class Sender extends Thread {
 
     public void run() {
         int j = 0;
+        boolean bitErr = false;
         while(j < 10) {
             //System.out.println("Sender start!");
+            bitErr = false;
             Message msg;
             while ((msg = queuer.poll()) == null) ;
-            System.out.println(threadName + " Recevied: " + msg.data + "\t ack:" + msg.ack);
+            if(ThreadLocalRandom.current().nextDouble(0, 1) >= Math.pow((1-p), Nf)) {
+                bitErr = true;
+                System.out.println(threadName + " Recevied: [curropted] " + msg.data + "\t ack: " + msg.ack);
+            } else {
+                System.out.println(threadName + " Recevied: " + msg.data + "\t ack: " + msg.ack);
+            }
             Ns = msg.ack;
-            if (Nr == msg.sendNumber)
+            if (Nr == msg.sendNumber && !bitErr)
                 Nr++;
             //msg.data = Data.elementAt(Ns);
             Message tmp = new Message();
             tmp.data = ("Data" + Ns);
             tmp.ack = Nr;
             tmp.sendNumber = Ns;
+            try {
+                sleep(20); // for print!
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             System.out.println(threadName + " Sent: " + tmp.data + "\t ack: " + tmp.ack);
             try {
                 sleep(sendWait);
