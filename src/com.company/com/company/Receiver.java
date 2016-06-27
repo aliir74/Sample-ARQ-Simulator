@@ -1,3 +1,6 @@
+package com.company;
+
+
 import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 
@@ -37,7 +40,7 @@ public class Receiver extends Thread {
     public void run() {
         Message msg;
         while((msg = queuer.poll()) == null);
-        System.out.println("Recevied: data=" + msg.data + "\t ack=" + msg.ack);
+        System.out.println(threadName + " Recevied: data=" + msg.data + "\t ack=" + msg.ack);
         Ns = msg.ack;
         if(Nr == msg.sendNumber)
             Nr++;

@@ -15,7 +15,7 @@ public class Main {
         v = sc.nextInt();
         d = sc.nextInt();
         if(protocol == 1) {
-
+            SW sw = new SW(Ws, Wr, p, R, Nf, v, d);
         }
 
     }
