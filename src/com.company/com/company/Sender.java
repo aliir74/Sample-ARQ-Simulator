@@ -38,28 +38,38 @@ public class Sender extends Thread {
     }
 
     public void run() {
-        System.out.println("Sender start!");
-        Message msg;
-        while((msg = queuer.poll()) == null);
-        System.out.println(threadName + " Recevied: data=" + msg.data + "\t ack=" + msg.ack);
-        Ns = msg.ack;
-        if(Nr == msg.sendNumber)
-            Nr++;
-        //msg.data = Data.elementAt(Ns);
-        msg.data = ("Data"+Ns);
-        msg.ack = Nr;
-        msg.sendNumber = Ns;
-        try {
-            sleep(sendWait);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        int j = 0;
+        while(j < 10) {
+            //System.out.println("Sender start!");
+            Message msg;
+            while ((msg = queuer.poll()) == null) ;
+            System.out.println(threadName + " Recevied: " + msg.data + "\t ack:" + msg.ack);
+            Ns = msg.ack;
+            if (Nr == msg.sendNumber)
+                Nr++;
+            //msg.data = Data.elementAt(Ns);
+            Message tmp = new Message();
+            tmp.data = ("Data" + Ns);
+            tmp.ack = Nr;
+            tmp.sendNumber = Ns;
+            System.out.println(threadName + " Sent: " + tmp.data + "\t ack: " + tmp.ack);
+            try {
+                sleep(sendWait);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                queues.put(tmp);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            j++;
         }
-        try {
-            queues.put(msg);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void start() {
@@ -67,12 +77,13 @@ public class Sender extends Thread {
         Message start = new Message();
         start.ack = 0;
         start.sendNumber = 0;
-        start.data = "hello";
+        start.data = "Data0";
         try {
             sleep(sendWait);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println(threadName + " Sent: " + start.data + "\t ack: " + start.ack);
         try {
             queues.put(start);
         } catch (InterruptedException e) {
