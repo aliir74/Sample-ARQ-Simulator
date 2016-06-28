@@ -71,11 +71,11 @@ public class SRReceiver extends Thread {
                     corrupted = true;
                     badPackets.add(msg.sendNumber);
                     System.err.println(threadName + " Recevied: [curropted] " + msg.data + "\t ack: " + msg.ack);
-                    Nr = Math.min(Nr, msg.sendNumber);
+                    //Nr = Math.min(Nr, msg.sendNumber);
                 } else {
                     System.err.println(threadName + " Recevied: " + msg.data + "\t ack: " + msg.ack);
-                    if(!corrupted)
-                        Nr++;
+                    //if(!corrupted)
+                      //  Nr++;
                 }
                 if(msg.ack < 100) {
                     Ns = msg.ack;
@@ -86,7 +86,6 @@ public class SRReceiver extends Thread {
                 }
                 /*if (i == Wr - 1 && Nr == msg.sendNumber && !bitErr)
                     Nr++;*/
-                Nr %= binaryPower(sequenceNumberBit);
             }
             //msg.data = Data.elementAt(Ns);
             int ack;
@@ -95,6 +94,8 @@ public class SRReceiver extends Thread {
                 limitr = 1;
             } else {
                 limitr = Wr;
+                Nr += Wr;
+                Nr %= binaryPower(sequenceNumberBit);
                 ack = Nr;
             }
             int sendNumber;

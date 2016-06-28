@@ -6,13 +6,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Created by ali on 6/27/16.
  */
-public class SW {
+public class Selector {
 
     private int Ws, Wr, R, Nf, v, d, sequenceNumberBit;
     private double p;
+    int protocol;
     BlockingQueue<Message> queue1, queue2;
 
-    public SW(int ws, int wr, double p, int r, int nf, int v, int d, int sequenceNumberBit) {
+    public Selector(int protocol, int ws, int wr, double p, int r, int nf, int v, int d, int sequenceNumberBit) {
+        this.protocol = protocol;
         Ws = ws;
         Wr = wr;
         R = r;
@@ -23,9 +25,12 @@ public class SW {
         this.sequenceNumberBit = sequenceNumberBit;
         queue1 = new LinkedBlockingQueue<Message>();
         queue2 = new LinkedBlockingQueue<Message>();
-        //senderReceiverCreate();
-        //GBNSenderReceiverCreate();
-        SRSenderReceiverCreate();
+        if(protocol == 1)
+            senderReceiverCreate();
+        else if(protocol == 2)
+            GBNSenderReceiverCreate();
+        else
+            SRSenderReceiverCreate();
     }
 
     void senderReceiverCreate() {
