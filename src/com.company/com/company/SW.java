@@ -23,7 +23,8 @@ public class SW {
         this.sequenceNumberBit = sequenceNumberBit;
         queue1 = new LinkedBlockingQueue<Message>();
         queue2 = new LinkedBlockingQueue<Message>();
-        senderReceiverCreate();
+        //senderReceiverCreate();
+        GBNSenderReceiverCreate();
     }
 
     void senderReceiverCreate() {
@@ -32,5 +33,13 @@ public class SW {
         sender.start();
         Receiver receiver = new Receiver(Wr, R, Nf, v, d, p, "receiver1", queue2, queue1, sequenceNumberBit);
         receiver.start();
+    }
+
+    void GBNSenderReceiverCreate() {
+        System.out.println("GBN Test!");
+        GBNSender gbnSender = new GBNSender(Ws, Wr, R, Nf, v, d, p, "gbnsender", queue1, queue2, sequenceNumberBit);
+        gbnSender.start();
+        GBNReceiver gbnReceiver = new GBNReceiver(Wr, Ws, R, Nf, v, d, p, "gbnreceiver", queue2, queue1, sequenceNumberBit);
+        gbnReceiver.start();
     }
 }

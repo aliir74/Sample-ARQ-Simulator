@@ -8,9 +8,9 @@ public class Main {
 	// write your code here
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter protocol(1-3), Ws, Wr, p, R, Nf, V, d, sequenceNumberBit:");
-        int protocol = 1, Ws = 0, Wr = 0;
+        int protocol = 1, Ws = 3, Wr = 2;
         int R = 1, Nf = 1, v = 1, d = 1;
-        double p = 0;
+        double p = 0.2;
         int sequenceNumberBit = 3;
         /*
         protocol = sc.nextInt(), Ws = sc.nextInt(), Wr = sc.nextInt();
