@@ -10,7 +10,7 @@ public class Main {
         System.out.println("Enter protocol(1-3), Ws, Wr, p, R, Nf, V, d, sequenceNumberBit:");
         int protocol = 1, Ws = 2, Wr = 2;
         int R = 1, Nf = 1, v = 1, d = 1;
-        double p = 0;
+        double p = 0.2;
         int sequenceNumberBit = 3;
         /*
         protocol = sc.nextInt(), Ws = sc.nextInt(), Wr = sc.nextInt();
