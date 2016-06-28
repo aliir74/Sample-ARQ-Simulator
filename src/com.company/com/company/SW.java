@@ -24,7 +24,8 @@ public class SW {
         queue1 = new LinkedBlockingQueue<Message>();
         queue2 = new LinkedBlockingQueue<Message>();
         //senderReceiverCreate();
-        GBNSenderReceiverCreate();
+        //GBNSenderReceiverCreate();
+        SRSenderReceiverCreate();
     }
 
     void senderReceiverCreate() {
@@ -41,5 +42,13 @@ public class SW {
         gbnSender.start();
         GBNReceiver gbnReceiver = new GBNReceiver(Wr, Ws, R, Nf, v, d, p, "gbnreceiver", queue2, queue1, sequenceNumberBit);
         gbnReceiver.start();
+    }
+
+    void SRSenderReceiverCreate() {
+        System.out.println("SR Test!");
+        SRSender srSender = new SRSender(Ws, Wr, R, Nf, v, d, p, "srSender", queue1, queue2, sequenceNumberBit);
+        srSender.start();
+        SRReceiver srReceiver = new SRReceiver(Wr, Ws, R, Nf, v, d, p, "srReceiver", queue2, queue1, sequenceNumberBit);
+        srReceiver.start();
     }
 }
