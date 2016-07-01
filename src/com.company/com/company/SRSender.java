@@ -17,6 +17,8 @@ public class SRSender extends Thread {
     int sendWait;
     int Ns, Nr;
     int sequenceNumberBit;
+    int receiveBit;
+    int time;
     Vector<String> Data;
     BlockingQueue<Message> queues, queuer;
     Queue<Integer> badPackets;
@@ -35,7 +37,7 @@ public class SRSender extends Thread {
         this.queues = queues;
         this.queuer = queuer;
         this.sequenceNumberBit = sequenceNumberBit;
-        sendWait = (int) Math.ceil(Nf / R + v / d);
+        sendWait = (int) Math.ceil((Nf+sequenceNumberBit+1)/R + d/v);
         Ns = 0;
         Nr = 0;
         Data = new Vector<>(10);
@@ -43,6 +45,8 @@ public class SRSender extends Thread {
             Data.insertElementAt("Data" + (i + 1), i);
         }
         badPackets = new LinkedList<>();
+        receiveBit = 0;
+        time = 0;
     }
 
     public void run() {
@@ -66,6 +70,7 @@ public class SRSender extends Thread {
                         e.printStackTrace();
                     }
                 }
+                time += sendWait;
                 if (ThreadLocalRandom.current().nextDouble(0, 1) >= Math.pow((1 - p), Nf)) {
                     bitErr = true;
                     corrupted = true;
@@ -74,6 +79,7 @@ public class SRSender extends Thread {
                 //    Nr = Math.min(Nr, msg.sendNumber);
                 } else {
                     System.out.println(threadName + " Recevied: " + msg.data + "\t ack: " + msg.ack);
+                    receiveBit += Nf;
                   //  if(!corrupted)
                  //       Nr++;
                 }
@@ -179,5 +185,13 @@ public class SRSender extends Thread {
             ans *= 2;
         }
         return ans;
+    }
+
+    public int getReceiveBit() {
+        return receiveBit;
+    }
+
+    public int getTime() {
+        return time;
     }
 }

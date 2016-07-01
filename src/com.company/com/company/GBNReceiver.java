@@ -15,6 +15,8 @@ public class GBNReceiver extends Thread {
     double p;
     int sendWait;
     int sequenceNumberBit;
+    int receiveBit;
+    int time;
     Vector<String> Data;
     BlockingQueue<Message> queues, queuer;
 
@@ -32,13 +34,15 @@ public class GBNReceiver extends Thread {
         this.queues = queues;
         this.queuer = queuer;
         this.sequenceNumberBit = sequenceNumberBit;
-        sendWait = (int) Math.ceil(Nf / R + v / d);
+        sendWait = (int) Math.ceil((Nf+sequenceNumberBit+1)/R + d/v);
         Ns = 0;
         Nr = 0;
         Data = new Vector<>(10);
         for (int i = 0; i < 10; i++) {
             Data.insertElementAt("Data" + (i + 1), i);
         }
+        time = 0;
+        receiveBit = 0;
     }
 
     public void run() {
@@ -57,6 +61,7 @@ public class GBNReceiver extends Thread {
                         e.printStackTrace();
                     }
                 }
+                time += sendWait;
                 if (ThreadLocalRandom.current().nextDouble(0, 1) >= Math.pow((1 - p), Nf)) {
                     bitErr = true;
                     corrupted = true;
@@ -64,6 +69,7 @@ public class GBNReceiver extends Thread {
                     Nr = Math.min(Nr, msg.sendNumber);
                 } else {
                     System.err.println(threadName + " Recevied: " + msg.data + "\t ack: " + msg.ack);
+                    receiveBit += Nf;
                     if(!corrupted)
                         Nr++;
                 }
@@ -120,5 +126,13 @@ public class GBNReceiver extends Thread {
             ans *= 2;
         }
         return ans;
+    }
+
+    public int getReceiveBit() {
+        return receiveBit;
+    }
+
+    public int getTime() {
+        return time;
     }
 }

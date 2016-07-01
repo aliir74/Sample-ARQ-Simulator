@@ -16,6 +16,8 @@ public class Receiver extends Thread {
     double p;
     int sendWait;
     int sequenceNumberBit;
+    int receiveBit;
+    int time;
     Vector<String> Data;
     BlockingQueue<Message> queues, queuer;
 
@@ -32,13 +34,15 @@ public class Receiver extends Thread {
         this.queues = queues;
         this.queuer = queuer;
         this.sequenceNumberBit = sequenceNumberBit;
-        sendWait = (int) Math.ceil(Nf/R + v/d);
+        sendWait = (int) Math.ceil((Nf+sequenceNumberBit+1)/R + d/v);
         Ns = 0;
         Nr = 0;
         Data = new Vector<>(10);
         for(int i = 0; i < 10; i++) {
             Data.insertElementAt("Data" + (i+1), i);
         }
+        receiveBit = 0;
+        time = 0;
     }
 
     public void run() {
@@ -49,11 +53,13 @@ public class Receiver extends Thread {
             Message msg;
             bitErr = false;
             while ((msg = queuer.poll()) == null) ;
+            time += sendWait;
             if(ThreadLocalRandom.current().nextDouble(0, 1) >= Math.pow((1-p), Nf)) {
                 bitErr = true;
                 System.err.println(threadName + " Recevied: [curropted] " + msg.data + "\t ack: " + msg.ack);
             } else {
                 System.err.println(threadName + " Recevied: " + msg.data + "\t ack: " + msg.ack);
+                receiveBit += Nf;
             }
             Ns = msg.ack;
             if (Nr == msg.sendNumber && !bitErr)
@@ -103,6 +109,14 @@ public class Receiver extends Thread {
             ans *= 2;
         }
         return ans;
+    }
+
+    public int getReceiveBit() {
+        return receiveBit;
+    }
+
+    public int getTime() {
+        return time;
     }
 }
 

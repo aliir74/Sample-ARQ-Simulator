@@ -9,15 +9,17 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by ali on 6/27/16.
  */
 public class Sender extends Thread {
-        Thread t;
-        String threadName;
-        int Ws, R, Nf, v, d;
-        double p;
-        int sendWait;
-        int Ns, Nr;
-        int sequenceNumberBit;
-        Vector<String> Data;
-        BlockingQueue<Message> queues, queuer;
+    Thread t;
+    String threadName;
+    int Ws, R, Nf, v, d;
+    double p;
+    int sendWait;
+    int Ns, Nr;
+    int sequenceNumberBit;
+    int receiveBit;
+    int time;
+    Vector<String> Data;
+    BlockingQueue<Message> queues, queuer;
 
     public Sender(int ws, int r, int nf, int v, int d, double p, String threadName,
                   BlockingQueue<Message> queues, BlockingQueue<Message> queuer, int sequenceNumberBit) {
@@ -31,13 +33,15 @@ public class Sender extends Thread {
         this.queues = queues;
         this.queuer = queuer;
         this.sequenceNumberBit = sequenceNumberBit;
-        sendWait = (int) Math.ceil(Nf/R + v/d);
+        sendWait = (int) Math.ceil((Nf+sequenceNumberBit+1)/R + d/v);
         Ns = 0;
         Nr = 0;
         Data = new Vector<>(10);
         for(int i = 0; i < 10; i++) {
             Data.insertElementAt("Data" + (i+1), i);
         }
+        receiveBit = 0;
+        time = 0;
     }
 
     public void run() {
@@ -48,11 +52,13 @@ public class Sender extends Thread {
             bitErr = false;
             Message msg;
             while ((msg = queuer.poll()) == null) ;
+            time += sendWait;
             if(ThreadLocalRandom.current().nextDouble(0, 1) >= Math.pow((1-p), Nf)) {
                 bitErr = true;
                 System.out.println(threadName + " Recevied: [curropted] " + msg.data + "\t ack: " + msg.ack);
             } else {
                 System.out.println(threadName + " Recevied: " + msg.data + "\t ack: " + msg.ack);
+                receiveBit += Nf;
             }
             Ns = msg.ack;
             if (Nr == msg.sendNumber && !bitErr)
@@ -118,5 +124,13 @@ public class Sender extends Thread {
             ans *= 2;
         }
         return ans;
+    }
+
+    public int getReceiveBit() {
+        return receiveBit;
+    }
+
+    public int getTime() {
+        return time;
     }
 }
