@@ -16,7 +16,8 @@ public class Main {
         double p = 0.001;
         int sequenceNumberBit = 3;
 
-        /*protocol = sc.nextInt();
+        protocol = sc.nextInt();
+        /*
         Ws = sc.nextInt();
         Wr = sc.nextInt();
         p = sc.nextDouble();

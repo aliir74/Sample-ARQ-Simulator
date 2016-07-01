@@ -39,40 +39,48 @@ public class Selector {
         Reff = 0;
         double tmp;
         if(protocol == 1) {
-            PrintWriter writer1 = new PrintWriter("/home/ali/SW.txt", "UTF-8");
-            for(int i = 0; i < n; i++) {
-                tmp = senderReceiverCreate();
-                System.out.println(tmp);
-                Reff += tmp;
+            PrintWriter writer1 = new PrintWriter("/home/ali/network/R/SW.txt", "UTF-8");
+            for(R = 100; R <= 100000000; R *= 10) {
+                Reff = 0;
+                for (int i = 0; i < n; i++) {
+                    tmp = senderReceiverCreate();
+                    System.out.println(tmp);
+                    Reff += tmp;
 
+                }
+                Reff /= n;
+                eta = Reff / R;
+                writer1.println(Reff + "\t" + eta);
             }
-            Reff /= n;
-            eta = Reff/R;
-            writer1.println(Reff + "\t" + eta);
             writer1.close();
         } else if(protocol == 2) {
-            PrintWriter writer2 = new PrintWriter("/home/ali/GBN.txt", "UTF-8");
-            for(int i = 0; i < n; i++) {
-                Reff += GBNSenderReceiverCreate();
+            PrintWriter writer2 = new PrintWriter("/home/ali/network/R/GBN.txt", "UTF-8");
+            for(R = 100; R <= 100000000; R *= 10) {
+                Reff = 0;
+                for (int i = 0; i < n; i++) {
+                    Reff += GBNSenderReceiverCreate();
+                }
+                Reff /= n;
+                eta = Reff / R;
+                writer2.println(Reff + "\t" + eta);
             }
-            Reff /= n;
-            eta = Reff/R;
-            writer2.println(Reff + "\t" + eta);
             writer2.close();
         } else {
-            PrintWriter writer3 = new PrintWriter("/home/ali/SR.txt", "UTF-8");
-            for(int i = 0; i < n; i++) {
-                Reff += SRSenderReceiverCreate();
+            PrintWriter writer3 = new PrintWriter("/home/ali/network/R/SR.txt", "UTF-8");
+            for(R = 100; R <= 100000000; R *= 10) {
+                Reff = 0;
+                for (int i = 0; i < n; i++) {
+                    Reff += SRSenderReceiverCreate();
+                }
+                Reff /= n;
+                eta = Reff / R;
+                writer3.println(Reff + "\t" + eta);
             }
-            Reff /= n;
-            eta = Reff/R;
-            writer3.println(Reff + "\t" + eta);
             writer3.close();
         }
     }
 
     double senderReceiverCreate() {
-        System.out.println("test");
         Sender sender = new Sender(Ws, R, Nf, v, d, p, "sender1", queue1, queue2, sequenceNumberBit);
         sender.start();
         Receiver receiver = new Receiver(Wr, R, Nf, v, d, p, "receiver1", queue2, queue1, sequenceNumberBit);

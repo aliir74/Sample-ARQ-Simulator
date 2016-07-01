@@ -73,7 +73,7 @@ public class SRSender extends Thread {
                     }
                 }
                 time += timeWait;
-                if (ThreadLocalRandom.current().nextDouble(0, 1) >= Math.pow((1 - p), Nf)) {
+                if (Math.random() >= Math.pow((1 - p), Nf)) {
                     bitErr = true;
                     corrupted = true;
                     badPackets.add(msg.sendNumber);

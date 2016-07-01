@@ -57,7 +57,7 @@ public class Sender extends Thread {
             while ((msg = queuer.poll()) == null) ;
             time += timeWait;
             System.out.println("time: " + time);
-            if(ThreadLocalRandom.current().nextDouble(0, 1) >= Math.pow((1-p), Nf)) {
+            if(Math.random() >= Math.pow((1-p), Nf)) {
                 bitErr = true;
                 System.out.println(threadName + " Recevied: [curropted] " + msg.data + "\t ack: " + msg.ack);
             } else {
