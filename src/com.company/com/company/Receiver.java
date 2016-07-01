@@ -17,7 +17,8 @@ public class Receiver extends Thread {
     int sendWait;
     int sequenceNumberBit;
     int receiveBit;
-    int time;
+    double time;
+    double timeWait;
     Vector<String> Data;
     BlockingQueue<Message> queues, queuer;
 
@@ -35,6 +36,7 @@ public class Receiver extends Thread {
         this.queuer = queuer;
         this.sequenceNumberBit = sequenceNumberBit;
         sendWait = (int) Math.ceil((Nf+sequenceNumberBit+1)/R + d/v);
+        timeWait = (Nf+sequenceNumberBit+1)/(1.*R) + d*1./v;
         Ns = 0;
         Nr = 0;
         Data = new Vector<>(10);
@@ -53,7 +55,7 @@ public class Receiver extends Thread {
             Message msg;
             bitErr = false;
             while ((msg = queuer.poll()) == null) ;
-            time += sendWait;
+            time += timeWait;
             if(ThreadLocalRandom.current().nextDouble(0, 1) >= Math.pow((1-p), Nf)) {
                 bitErr = true;
                 System.err.println(threadName + " Recevied: [curropted] " + msg.data + "\t ack: " + msg.ack);
@@ -115,7 +117,7 @@ public class Receiver extends Thread {
         return receiveBit;
     }
 
-    public int getTime() {
+    public double getTime() {
         return time;
     }
 }

@@ -35,36 +35,40 @@ public class Selector {
         queue1 = new LinkedBlockingQueue<Message>();
         queue2 = new LinkedBlockingQueue<Message>();
         N = n;
-        sleepTime = 10000;
+        sleepTime = 1000;
         Reff = 0;
-        PrintWriter writer1 = new PrintWriter("/home/ali/SW.txt", "UTF-8");
-        PrintWriter writer2 = new PrintWriter("/home/ali/GBN.txt", "UTF-8");
-        PrintWriter writer3 = new PrintWriter("/home/ali/SR.txt", "UTF-8");
+        double tmp;
         if(protocol == 1) {
+            PrintWriter writer1 = new PrintWriter("/home/ali/SW.txt", "UTF-8");
             for(int i = 0; i < n; i++) {
-                Reff += senderReceiverCreate();
+                tmp = senderReceiverCreate();
+                System.out.println(tmp);
+                Reff += tmp;
+
             }
             Reff /= n;
             eta = Reff/R;
             writer1.println(Reff + "\t" + eta);
+            writer1.close();
         } else if(protocol == 2) {
+            PrintWriter writer2 = new PrintWriter("/home/ali/GBN.txt", "UTF-8");
             for(int i = 0; i < n; i++) {
                 Reff += GBNSenderReceiverCreate();
             }
             Reff /= n;
             eta = Reff/R;
             writer2.println(Reff + "\t" + eta);
+            writer2.close();
         } else {
+            PrintWriter writer3 = new PrintWriter("/home/ali/SR.txt", "UTF-8");
             for(int i = 0; i < n; i++) {
                 Reff += SRSenderReceiverCreate();
             }
             Reff /= n;
             eta = Reff/R;
             writer3.println(Reff + "\t" + eta);
+            writer3.close();
         }
-        writer1.close();
-        writer2.close();
-        writer3.close();
     }
 
     double senderReceiverCreate() {
@@ -79,6 +83,7 @@ public class Selector {
             e.printStackTrace();
         }
         //System.out.println(sender.getReceiveBit());
+        System.out.println(sender.getTime() + receiver.getTime());
         return (sender.getReceiveBit() + receiver.getReceiveBit())/(1.*(sender.getTime()+receiver.getTime()));
     }
 

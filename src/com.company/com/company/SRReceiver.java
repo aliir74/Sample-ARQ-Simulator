@@ -18,7 +18,8 @@ public class SRReceiver extends Thread {
     int sendWait;
     int sequenceNumberBit;
     int receiveBit;
-    int time;
+    double time;
+    double timeWait;
     Vector<String> Data;
     BlockingQueue<Message> queues, queuer;
     Queue<Integer> badPackets;
@@ -38,6 +39,7 @@ public class SRReceiver extends Thread {
         this.queuer = queuer;
         this.sequenceNumberBit = sequenceNumberBit;
         sendWait = (int) Math.ceil((Nf+sequenceNumberBit+1)/R + d/v);
+        timeWait = (Nf+sequenceNumberBit+1)/(1.*R) + d*1./v;
         Ns = 0;
         Nr = 0;
         Data = new Vector<>(10);
@@ -70,7 +72,7 @@ public class SRReceiver extends Thread {
                         e.printStackTrace();
                     }
                 }
-                time += sendWait;
+                time += timeWait;
                 if (ThreadLocalRandom.current().nextDouble(0, 1) >= Math.pow((1 - p), Nf)) {
                     bitErr = true;
                     corrupted = true;
@@ -169,7 +171,7 @@ public class SRReceiver extends Thread {
         return receiveBit;
     }
 
-    public int getTime() {
+    public double getTime() {
         return time;
     }
 }

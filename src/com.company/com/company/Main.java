@@ -10,13 +10,13 @@ public class Main {
 	// write your code here
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter protocol(1-3), Ws, Wr, p, R, Nf, V, d, sequenceNumberBit, N:");
-        int protocol = 1, Ws = 4, Wr = 2;
-        int R = 1, Nf = 1, v = 1, d = 1;
-        int N = 1;
-        double p = 0.3;
+        int protocol = 3, Ws = 4, Wr = 2;
+        int R = 10000, Nf = 100, v = 300000000, d = 1000;
+        int N = 5;
+        double p = 0.001;
         int sequenceNumberBit = 3;
 
-        protocol = sc.nextInt();
+        /*protocol = sc.nextInt();
         Ws = sc.nextInt();
         Wr = sc.nextInt();
         p = sc.nextDouble();
@@ -26,7 +26,7 @@ public class Main {
         d = sc.nextInt();
         sequenceNumberBit = sc.nextInt();
         N = sc.nextInt();
-
+*/
         Selector selector = new Selector(protocol, Ws, Wr, p, R, Nf, v, d, sequenceNumberBit, N);
     }
 }
